@@ -151,3 +151,11 @@ fromList ls a = col g ls where
   row c [] = c
   row c (v:vs) = iswap v (west $ row (east c) vs)
 
+fromStringBy :: (Char -> a) -> a -> String -> Cell a
+fromStringBy f d s = fromList (map (map f) $ lines s) d
+
+fromString :: String -> Cell Bool
+fromString = fromStringBy f False where
+  f '#' = True
+  f _   = False
+
