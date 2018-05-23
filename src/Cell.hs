@@ -159,3 +159,25 @@ fromString = fromStringBy f False where
   f '#' = True
   f _   = False
 
+moore :: Cell a -> (Cell a, Cell a, Cell a, Cell a, Cell a, Cell a, Cell a, Cell a)
+moore c = ( west $ north c
+          , north        c
+          , east $ north c
+          , west         c
+          , east         c
+          , west $ south c
+          , south        c
+          , east $ south c
+          )
+
+mooreNumBy :: (a -> Int) -> (Cell a, Cell a, Cell a, Cell a, Cell a, Cell a, Cell a, Cell a) -> Int
+mooreNumBy f (nw, n, ne, w, e, sw, s, se) = sum $ map f cs where
+  cs = [nw, n, ne, w, e, sw, s, se]
+
+mooreNum :: (Cell Bool, Cell Bool, Cell Bool, Cell Bool, Cell Bool, Cell Bool, Cell Bool, Cell Bool) -> Int
+mooreNum = mooreNumBy fromEnum
+
+conway :: Cell Bool -> Cell Bool
+conway c = n == 3 || (i && (n == 2 || n == 3)) where
+  i = info c
+  n = mooreNum c
