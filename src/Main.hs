@@ -1,5 +1,10 @@
 module Main where
 
-import Cell
+import qualified Cell
+import qualified System.Environment as Env
 
-main = print "main!!!"
+main = do
+  [boardFileName] <- Env.getArgs
+  boardFile <- readFile boardFileName
+  print boardFile
+  -- print (Cell.fromString boardFile)
