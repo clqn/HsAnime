@@ -170,14 +170,15 @@ moore c = ( west $ north c
           , east $ south c
           )
 
-mooreNumBy :: (a -> Int) -> (Cell a, Cell a, Cell a, Cell a, Cell a, Cell a, Cell a, Cell a) -> Int
-mooreNumBy f (nw, n, ne, w, e, sw, s, se) = sum $ map f cs where
-  cs = [nw, n, ne, w, e, sw, s, se]
+mooreNumBy :: (a -> Int) -> Cell a -> Int
+mooreNumBy f c = sum $ map (f.info) cs where
+  (nw, n, ne, w, e, sw, s, se) = moore c
+  cs                           = [nw, n, ne, w, e, sw, s, se]
 
-mooreNum :: (Cell Bool, Cell Bool, Cell Bool, Cell Bool, Cell Bool, Cell Bool, Cell Bool, Cell Bool) -> Int
+mooreNum :: Cell Bool -> Int
 mooreNum = mooreNumBy fromEnum
 
 conway :: Cell Bool -> Cell Bool
-conway c = n == 3 || (i && (n == 2 || n == 3)) where
+conway c = iswap (n == 3 || (i && (n == 2 || n == 3))) c where
   i = info c
   n = mooreNum c
