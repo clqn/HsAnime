@@ -9,7 +9,7 @@ module Cell
   )
   where
 
-import Control.Comonad
+import qualified Control.Comonad as Co
 {- | A Cell represents a point of focus on an infinite grid. It has a state value,
 which can contain some arbitrary piece of information.
 
@@ -120,7 +120,7 @@ iswap v (Cell i n w e s) = c' where
 instance Functor Cell where
   fmap f = cmap (\c -> f $ info c)
 
-instance Comonad Cell where
+instance Co.Comonad Cell where
   extract = info -- comonadic "return"
   extend = cmap -- comonadic "bind"
   duplicate = cmap id -- comonadic "join" 
