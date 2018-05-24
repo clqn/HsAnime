@@ -1,17 +1,28 @@
 module Main where
 
 import Graphics.Gloss as Gl
+import Cell as C
 
-main
-  = Gl.display 
-      (Gl.InWindow
-         "Hello World" -- window title
-         (400, 150)    -- window size
-         (10, 10))     -- window position
-      Gl.white         -- background color
-      picture          -- picture to display
 
-picture
-  = Gl.Translate (-170) (-20) -- shift the text to the middle of the window
-  $ Gl.Scale 0.5 0.5          -- display it half the original size
-  $ Gl.Text "Hello World"     -- text to display
+main :: IO ()
+main = do
+  let gld = [[False, True, False], [False, False, True], [True, True, True]]
+  Gl.display
+    (Gl.InWindow
+      "Hello World" -- window title
+      (800, 800)    -- window size
+      (10, 10))     -- window position
+    Gl.white        -- background color
+    (picture gld)   -- picture to display
+
+picture :: [[Bool]] -> Gl.Picture
+picture bs = Gl.Pictures circles where
+  bs' = map (zip [0,20..]) bs
+  rows = zip [0,20..] bs'
+  circles = concat [ (flip map)
+                       r (\(x,b) -> if b
+                                    then Gl.Translate x (-y) (Gl.Circle 10)
+                                    else Gl.Blank)
+                   | (y, r) <- rows
+                   ]
+
