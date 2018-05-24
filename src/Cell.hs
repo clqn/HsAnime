@@ -6,6 +6,8 @@ module Cell
   , west
   , east
   , south
+  , fromString
+  , focus
   )
   where
 
@@ -28,6 +30,7 @@ data Cell a = Cell { info :: a
                    , east :: Cell a
                    , south :: Cell a
                    }
+
 
 {- | cmap is in fact the extend function for Cell (extend is the comonad
 equivalent of bind)
@@ -142,6 +145,20 @@ newGrid i = c where
 {--
 
 --}
+
+{- | focus takes a single cell and gives you a finite neighborhood
+in a radius around the cell.
+-}
+focus :: (Cell a) -> Int -> [[a]]
+focus cell radius =
+  take (radius*2)
+    [ map info (take (radius*2) (iterate east row))
+    | row <- iterate south topLeft
+    ]
+  where topLeft =
+          head $ drop radius $ iterate west $     -- go north by radius
+          head $ drop radius $ iterate north cell -- go west by raidus
+
 
 fromList :: [[a]] -> a -> (Cell a)
 fromList ls a = col g ls where
