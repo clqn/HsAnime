@@ -2,18 +2,21 @@ module Main where
 
 import Graphics.Gloss as Gl
 import Cell as C
-
+import System.Environment as Env
 
 main :: IO ()
 main = do
-  let gld = [[False, True, False], [False, False, True], [True, True, True]]
+  [fname] <- Env.getArgs
+  gstring <- readFile fname
+  let g = C.focus (C.fromString gstring) 10
+  print g
   Gl.display
     (Gl.InWindow
       "Hello World" -- window title
       (800, 800)    -- window size
       (10, 10))     -- window position
     Gl.white        -- background color
-    (picture gld)   -- picture to display
+    (picture g)   -- picture to display
 
 picture :: [[Bool]] -> Gl.Picture
 picture bs = Gl.Pictures circles where
